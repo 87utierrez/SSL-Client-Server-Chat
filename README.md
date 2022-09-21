@@ -1,18 +1,20 @@
 ## Getting Started
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Without keystore, both the server and client will fail. This video show how to generate keystore using keytool program. Then run server and client with keystore and password.
 
-## Folder Structure
 
-The workspace contains two folders by default, where:
+Type the following command in your command window to create a keystore named examplestore and to generate keys:
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+$ keytool -genkey -alias signFiles -keystore examplestore
+$ keytool -genkey -alias example -keyalg RSA -sigalg SHA256withRSA -keysize 2048 -validity 3650 -keystore keystore.jks
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+Examples not sure if it is required.
+keytool -certreq -alias <alias> -keystore <keystore>.jks -file <file>.csr -sigalg SHA1WithRSA
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+You will be prompted to enter passwords for the key and keystore. The password in this example is "password".
 
-## Dependency Management
+(reference: https://docs.oracle.com/javase/tutorial/security/toolsign/step3.html)
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+Run SSL server and client by entering the commands:
+$ java -Djavax.net.ssl.keyStore=keystore -Djavax.net.ssl.keyStorePassword=password "...JavaSSLServer.java"
+$ java -Djavax.net.ssl.trustStore=keystore -Djavax.net.ssl.trustStorePassword=password "...JavaSSLClient.java"
